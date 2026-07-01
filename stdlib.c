@@ -20,8 +20,15 @@ vec_t *vector_init() {
 }
 
 void realloc_vector(vec_t *vector, int size) {
+    int old_len;
+
+    old_len = vector->len;
+
     vector->len = size;
-    vector->data = realloc(vector->data, size);
+    vector->data = realloc(vector->data, size * sizeof(int));
+
+    for (int i = old_len; i < vector->len; ++i) // Initializing new blocks with 0
+        vector->data[i] = 0;
 
     if (vector->data == NULL) {
         runtime_panic(-1, "Failed to reallocate array to %d", size);
@@ -53,7 +60,7 @@ void move_forward(vec_t *vector, int delta) {
 void move_backward(vec_t *vector, int delta) {
     int new_pos;
 
-    new_pos = vector->current_cell + delta;
+    new_pos = vector->current_cell - delta;
 
     if (new_pos < 0)
         runtime_panic(-2, "Vector address is less than 0: %d", new_pos);
@@ -63,10 +70,12 @@ void move_backward(vec_t *vector, int delta) {
 
 void print_cell_num(vec_t *vector) {
     printf("%d", vector_get(vector));
+    fflush(stdout);
 }
 
 void print_cell(vec_t *vector) {
     printf("%c", vector_get(vector));
+    fflush(stdout);
 }
 
 void add_to_cell(vec_t *vector, int x) {
@@ -75,4 +84,8 @@ void add_to_cell(vec_t *vector, int x) {
 
 void sub_from_cell(vec_t *vector, int x) {
     vector_put(vector, -x);
+}
+
+void ln() {
+    putchar('\n');
 }
