@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
-cc -c runtime.c -o runtime.o
-cc -c stdlib.c -o stdlib.o
-ar rcs runtime.o stdlib.o stdlib.a
+rm -rf runtime.o stdlib.o
+
+cc -static -c runtime.c -o runtime.o
+cc -static -c stdlib.c -o stdlib.o
+
+ar rcs stdlib.a runtime.o stdlib.o
